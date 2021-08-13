@@ -59,7 +59,7 @@ router.put("/api/workouts/:id", (req, res) => {
     $push: {
       exercises: req.body
     }
-  }, {new: true})
+  }, {new: true, runValidators: true})
   .then(dbWorkout => {
     res.json(dbWorkout)
   })
