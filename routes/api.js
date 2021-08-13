@@ -12,17 +12,7 @@ router.post("/api/workouts", (req, res) => {
     });
 });
 
-router.get("/api/workouts", (req, res) => {
-  Workout.find({})
-  .then(dbWorkout => {
-    res.json(dbWorkout);
-  })
-  .catch(err => {
-    res.json(err);
-  });
-});
-
-router.get("/api/workouts/range", (req, res) => {
+router.get("/api/workouts/", (req, res) => {
   Workout.aggregate(
     [
       {
@@ -42,8 +32,19 @@ router.get("/api/workouts/range", (req, res) => {
     });
 });
 
+
 router.get("/api/workouts/range", (req, res) => {
-  Workout.find({}).limit(7)
+  Workout.aggregate(
+    [
+      {
+        $addFields: {
+          totalDuration: {
+            $sum: "$exercises.duration"
+          }
+        }
+      }
+    ]
+    ).sort({ day: -1 }).limit(7)
     .then(dbWorkout => {
       res.json(dbWorkout);
     })
